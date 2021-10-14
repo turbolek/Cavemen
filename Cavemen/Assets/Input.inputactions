@@ -1,0 +1,79 @@
+{
+    "name": "Input",
+    "maps": [
+        {
+            "name": "GeneralActions",
+            "id": "2f055d03-8cb7-4d36-a9a9-534760554d8a",
+            "actions": [
+                {
+                    "name": "Select",
+                    "type": "Button",
+                    "id": "64c85bbe-a29a-4924-a0ff-def919284761",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": ""
+                },
+                {
+                    "name": "UpdateMousePosition",
+                    "type": "Value",
+                    "id": "5f9cf343-9352-49df-8e90-2d6c3df6b9be",
+                    "expectedControlType": "Vector2",
+                    "processors": "",
+                    "interactions": ""
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "ab7b9172-cec5-46e2-b1b6-95867e8e76e4",
+                    "path": "<Mouse>/leftButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Select",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "dac7b456-2718-440f-ace1-db89d745cef4",
+                    "path": "<Mouse>/position",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "UpdateMousePosition",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        },
+        {
+            "name": "UnitActions",
+            "id": "84241be6-8afc-42af-891f-d02f2e3e5cd2",
+            "actions": [
+                {
+                    "name": "Move",
+                    "type": "Button",
+                    "id": "cc56ae32-c72b-4bce-a7be-69119d8173d4",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": ""
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "3a20a7c8-a836-4cd3-a7bf-565b649a5b3b",
+                    "path": "<Mouse>/rightButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Move",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        }
+    ],
+    "controlSchemes": []
+}
