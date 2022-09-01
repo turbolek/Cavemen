@@ -8,12 +8,16 @@ public class Unit : MonoBehaviour
 {
     [SerializeField]
     private float _movementSpeed;
+    [SerializeField]
+    private float _interactionCooldown = 1f;
 
     private CancellationTokenSource _moveCancelationToken;
     public IInteractable InteractionTarget { get; private set; }
     private Vector3 _targetPosition;
 
     public bool IsSelected { get; private set; } = false;
+
+
 
     private void Start()
     {
@@ -81,7 +85,7 @@ public class Unit : MonoBehaviour
         if (!cancellationToken.IsCancellationRequested)
         {
             transform.position = targetPosition;
-            OnTargetReached();
+            OnTargetReached(cancellationToken);
         }
     }
 
@@ -93,11 +97,27 @@ public class Unit : MonoBehaviour
         }
     }
 
-    private void OnTargetReached()
+    private void OnTargetReached(CancellationToken token)
     {
-        if (InteractionTarget != null && InteractionTarget.IsInteractable())
+        InteractWithTarget(token);
+    }
+
+    private async Task InteractWithTarget(CancellationToken token)
+    {
+
+        if (InteractionTarget != null)
         {
-            InteractionTarget.Interact();
+            float cooldown = _interactionCooldown;
+            while (!token.IsCancellationRequested && InteractionTarget.IsInteractable())
+            {
+                if (cooldown <= 0f)
+                {
+                    InteractionTarget.Interact();
+                    cooldown = _interactionCooldown;
+                }
+                await Task.Yield();
+                cooldown -= Time.deltaTime;
+            }
         }
     }
 
