@@ -67,7 +67,12 @@ public class PlayerController : MonoBehaviour
     private void OnReseachButtonClicked(ResearchButton button)
     {
         _resourcesAmount -= button.Data.Cost;
-        _availableResearches.Add(button.Data);
+        _purchasedResearches.Add(button.Data);
         RefreshUI();
+    }
+
+    public bool CheckIfResearchUnlocked(ResearchData researchData)
+    {
+        return _purchasedResearches.Contains(researchData);
     }
 }

@@ -13,9 +13,23 @@ public class ResourceStockpile : MonoBehaviour, IInteractable
     [SerializeField]
     private List<ResearchData> RequiredResearches = new List<ResearchData>();
 
+    private PlayerController playerController;
+
+    private void Start()
+    {
+        playerController = FindObjectOfType<PlayerController>();
+    }
+
     public void Interact()
     {
-        PickupResource();
+        if (CheckRequiredResearches())
+        {
+            PickupResource();
+        }
+        else
+        {
+            Debug.Log("Research required");
+        }
     }
 
     private void PickupResource()
@@ -29,11 +43,19 @@ public class ResourceStockpile : MonoBehaviour, IInteractable
 
     public bool IsInteractable()
     {
-        return CheckRequiredResearches() && _amount > 0;
+        return _amount > 0;
     }
 
     private bool CheckRequiredResearches()
     {
+        foreach (ResearchData researchData in RequiredResearches)
+        {
+            if (!playerController.CheckIfResearchUnlocked(researchData))
+            {
+                return false;
+            }
+        }
+
         return true;
     }
 

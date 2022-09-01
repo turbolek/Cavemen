@@ -111,3 +111,5 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _amount: 5
+  RequiredResearches:
+  - {fileID: 11400000, guid: 26eb3de3407fd8346971f52e4a032053, type: 2}
