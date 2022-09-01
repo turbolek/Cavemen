@@ -10,6 +10,9 @@ public class ResourceStockpile : MonoBehaviour, IInteractable
     [SerializeField]
     private int _amount = 5;
 
+    [SerializeField]
+    private List<ResearchData> RequiredResearches = new List<ResearchData>();
+
     public void Interact()
     {
         PickupResource();
@@ -26,7 +29,12 @@ public class ResourceStockpile : MonoBehaviour, IInteractable
 
     public bool IsInteractable()
     {
-        return _amount > 0;
+        return CheckRequiredResearches() && _amount > 0;
+    }
+
+    private bool CheckRequiredResearches()
+    {
+        return true;
     }
 
     public Vector3 GetPosition()
