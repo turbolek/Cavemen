@@ -10,6 +10,8 @@ public class Unit : MonoBehaviour
     private float _movementSpeed;
 
     private CancellationTokenSource _moveCancelationToken;
+    public IInteractable InteractionTarget { get; private set; }
+    private Vector3 _targetPosition;
 
     public bool IsSelected { get; private set; } = false;
 
@@ -30,7 +32,22 @@ public class Unit : MonoBehaviour
         Debug.Log("Unit deselected");
     }
 
-    public void Move(Vector3 groundPosition)
+    public void SetTarget(IInteractable targetInteractable, Vector3 groundPosition)
+    {
+        InteractionTarget = targetInteractable;
+        if (InteractionTarget != null)
+        {
+            _targetPosition = InteractionTarget.GetPosition();
+        }
+        else
+        {
+            _targetPosition = groundPosition;
+        }
+
+        Move();
+    }
+
+    private void Move()
     {
         if (_moveCancelationToken != null)
         {
@@ -38,12 +55,12 @@ public class Unit : MonoBehaviour
         }
 
         _moveCancelationToken = new CancellationTokenSource();
-        MoveTask(groundPosition, _moveCancelationToken.Token);
+        MoveTask(_moveCancelationToken.Token);
     }
 
-    private async Task MoveTask(Vector3 groundPosition, CancellationToken cancellationToken)
+    private async Task MoveTask(CancellationToken cancellationToken)
     {
-        Vector3 targetPosition = new Vector3(groundPosition.x, transform.position.y, groundPosition.z);
+        Vector3 targetPosition = new Vector3(_targetPosition.x, transform.position.y, _targetPosition.z);
         transform.LookAt(targetPosition, Vector3.up);
 
         float distance = Vector3.Distance(targetPosition, transform.position);
@@ -57,11 +74,32 @@ public class Unit : MonoBehaviour
             stepDistance = _movementSpeed * Time.deltaTime;
 
             await Task.Yield();
+
+            UpdateTargetPosition();
         }
 
         if (!cancellationToken.IsCancellationRequested)
         {
             transform.position = targetPosition;
+            OnTargetReached();
         }
     }
+
+    private void UpdateTargetPosition()
+    {
+        if (InteractionTarget != null)
+        {
+            _targetPosition = InteractionTarget.GetPosition();
+        }
+    }
+
+    private void OnTargetReached()
+    {
+        if (InteractionTarget != null && InteractionTarget.IsInteractable())
+        {
+            InteractionTarget.Interact();
+        }
+    }
+
+
 }

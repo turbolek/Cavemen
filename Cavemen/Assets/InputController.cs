@@ -10,10 +10,12 @@ public class InputController : MonoBehaviour
     private Unit _selectedUnit;
 
     [SerializeField]
-    private LayerMask _groundLayerMask;
+    private LayerMask _interactionMask;
     private Vector3 _mouseGroundPosition;
     private Vector3 _mouseWorldPosition;
     private Vector2 _mouseScreenPosition;
+
+    private IInteractable _interactable;
 
     void Start()
     {
@@ -91,11 +93,19 @@ public class InputController : MonoBehaviour
         RaycastHit hit;
         Ray ray = _camera.ScreenPointToRay(_mouseScreenPosition);
 
-        Physics.Raycast(ray, out hit, _groundLayerMask);
+        Physics.Raycast(ray, out hit, _interactionMask);
 
         if (hit.transform != null)
         {
-            _mouseGroundPosition = hit.point;
+            _interactable = hit.transform.GetComponent<IInteractable>();
+            if (_interactable != null)
+            {
+                _mouseGroundPosition = _interactable.GetPosition();
+            }
+            else
+            {
+                _mouseGroundPosition = hit.point;
+            }
         }
     }
 
@@ -103,7 +113,7 @@ public class InputController : MonoBehaviour
     {
         if (_selectedUnit != null)
         {
-            _selectedUnit.Move(_mouseGroundPosition);
+            _selectedUnit.SetTarget(_interactable, _mouseGroundPosition);
         }
     }
 
